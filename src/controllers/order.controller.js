@@ -27,16 +27,45 @@ const createOrder = async (req, res) => {
 
 const getOrders = async (req, res) => {
   try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 5;
+    const skip = (page - 1) * limit;
+
     const filter = {};
 
     if (req.query.status) {
       filter.status = req.query.status;
     }
 
-    const orders = await Order.find(filter).sort({ createdAt: -1 });
+    if (req.query.search) {
+      filter.$or = [
+        {
+          customerName: {
+            $regex: req.query.search,
+            $options: "i",
+          },
+        },
+        {
+          orderId: {
+            $regex: req.query.search,
+            $options: "i",
+          },
+        },
+      ];
+    }
+
+    const totalOrders = await Order.countDocuments(filter);
+
+    const orders = await Order.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
 
     res.status(200).json({
-      total: orders.length,
+      page,
+      limit,
+      totalOrders,
+      totalPages: Math.ceil(totalOrders / limit),
       orders,
     });
   } catch (error) {
