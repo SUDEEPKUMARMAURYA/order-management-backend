@@ -5,22 +5,23 @@ const createOrder = async (req, res) => {
   try {
     const order = await Order.create({
       orderId: uuidv4(),
-
       customerName: req.body.customerName,
-
       phoneNumber: req.body.phoneNumber,
-
       productName: req.body.productName,
-
       amount: req.body.amount,
-
+      status: req.body.status,
       paymentStatus: req.body.paymentStatus,
     });
 
-    res.status(201).json(order);
+    return res.status(201).json({
+      success: true,
+      message: "Order created successfully.",
+      order,
+    });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Unable to create order.",
     });
   }
 };
@@ -61,7 +62,9 @@ const getOrders = async (req, res) => {
       .skip(skip)
       .limit(limit);
 
-    res.status(200).json({
+    return res.status(200).json({
+      success: true,
+      message: "Orders fetched successfully.",
       page,
       limit,
       totalOrders,
@@ -69,8 +72,9 @@ const getOrders = async (req, res) => {
       orders,
     });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Unable to fetch orders.",
     });
   }
 };
