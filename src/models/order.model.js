@@ -16,7 +16,7 @@ const orderSchema = new mongoose.Schema(
     phoneNumber: {
     type: String,
     required: true,
-    match: /^[0-9]{10}$/
+    
 },
 
     productName: {
