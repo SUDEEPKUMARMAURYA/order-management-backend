@@ -17,7 +17,7 @@ const schedulerLogSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 module.exports = mongoose.model("SchedulerLog", schedulerLogSchema);
