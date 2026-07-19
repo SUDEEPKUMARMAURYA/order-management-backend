@@ -48,7 +48,10 @@ const orderSchema = new mongoose.Schema(
 
 );
 
-orderSchema.index({ customerName: 1 });
-orderSchema.index({ status: 1 });
+orderSchema.index({
+  status: 1,
+  customerName: 1,
+  orderId: 1,
+});
 
 module.exports = mongoose.model("Order", orderSchema);
